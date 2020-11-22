@@ -1,6 +1,8 @@
 /* script sets up arrays for images to depict cultures we want to represent on the app and to control the playlists 
 because the APIs we looked at for music do not specify culture but rahter music Genre and when searching it is difficult to decern a 
 culture (like French from an artist or group with French in the name) so we manually selected the PL from the provider */
+
+// Array to support the dynamic photos and overcome playlist limitation
 const cultures = {
 	French: {
 		images: ["anthony-delanoix-Q0-fOL2nqZc-unsplash.jpg","adrien-tutin-hCh_PHIhoLI-unsplash.jpg",
@@ -48,15 +50,34 @@ const cultures = {
 		playlist: [4779177244,8146526982,5353448802,6514155104,272400133]
 	}
 }
-// Old API exceeded daily so need to wait to reuse
-//var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
-// K's key 
-var recpAPIKey = "579753ff1b574d34b8ee1dcf5a821aa9";
-//var recpAPIKey = "287cb63de4fa4f29a7e39554c076b89a";
-//var recpAPIKey = "99493ec7b2934e05a34e73942f62b56a";
-//var recpAPIKey = "5db5a55184e047fdac2049bb1ebc9ca7";
-// C's key
-//var recpAPIKey = "9dfce7ea73a64b7b8972402866120e19";
+// API Variables section 
+var recpAPIKey = "070f982d64c543179d48715c5aaa529d";
+
+
+/*
+fetch("https://deezerdevs-deezer.p.rapidapi.com/search?q=eminem", {
+	"method": "GET",
+	"headers": {
+		"x-rapidapi-key": "bed16f1cc4msha68824ad4c37dffp1f1423jsn9c23aa4bd58a",
+		"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
+	}
+})
+.then(response => {
+	console.log(response);
+})
+.catch(err => {
+	console.error(err);
+});
+*/
+
+
+
+
+
+
+
+
+
 
 // fetchRecipes is a function that does a search from the spoonacular website - once it find the recipes that meet the criteria
 // it gets deails on the recipes like description, wine pairing and url of the actual recipe that we will use later
@@ -76,7 +97,7 @@ async function fetchRecipes (cuisine){
 	 if(localStorage.getItem("recipes")){
 		localStorage.removeItem("recipes")
 	}	
-//------------------fetch 5 random recipes from the country of coice (cuisine variable)----------------------------//	
+//------------------fetch 50 recipes from the country of coice (cuisine variable)----------------------------//	
 await fetch(`https://api.spoonacular.com/recipes/complexSearch?cuisine=${cuisine}&number=${num}&apiKey=${recpAPIKey}`, {
  })
    .then(function(resp) {
@@ -139,7 +160,7 @@ var id="",imgLink
     await fetch(`https://deezerdevs-deezer.p.rapidapi.com/playlist/${pl}`, {
 		"method": "GET",
 		"headers": {
-			"x-rapidapi-key": "62017d8fd9mshd9035f5f87933f1p1f6d2djsn6ef6fec8205b",
+			"x-rapidapi-key": "bed16f1cc4msha68824ad4c37dffp1f1423jsn9c23aa4bd58a",
 			"x-rapidapi-host": "deezerdevs-deezer.p.rapidapi.com"
 		}
 	})
@@ -268,6 +289,7 @@ function finalPage(recId){
 	rhtml = `<figure class="image is-3by5">  
 	<iframe class="has-ratio" style="width:500px;height:750px;" src="${rlink}" 
 	frameborder="0"></iframe></figure>`;
+	// could have used same document methods but this was 
 	newT.innerHTML=rhtml
 	newC.appendChild(newT);
 
@@ -282,6 +304,7 @@ function finalPage(recId){
 		let plid = decodeURI(myMusic1.id);
 		let mtitle = myMusic1.title;
 		let mlink = decodeURI(myMusic1.link);
+		// used html and innerHTML could have used same document methods but this was faster...
 		mhtml = `<iframe scrolling="no" frameborder="0" allowTransparency="true" title=${mtitle}
 		src="https://www.deezer.com/plugins/player?format=square&autoplay=true&playlist=false&width=500&height=500&color=EF5466&layout=&size=medium&type=playlist&id=${plid}&app_id=1" 
 		width="500" height="500"></iframe>`
@@ -292,9 +315,9 @@ function finalPage(recId){
 	mDiv.innerHTML =  mhtml + dhtml;
 	newC.appendChild(mDiv);
 	resPg.appendChild(newC);
-	// Place holder to clear the local storage don't need it now everthing is done but while in dev not executing this
-	// 	localStorage.removeItem("recipes");
-	// 	localStorage.removeItem("playlist");
+	// Clear the local storage at the last screen 
+		localStorage.removeItem("recipes");
+		localStorage.removeItem("playlist");
 }	
 
 
@@ -365,7 +388,7 @@ function getRandomInt(max) {
 	return Math.floor(Math.random() * Math.floor(max));
   }
 // borrowed this code from gomakethings because Ineeded to go back to find the closets tr to click 
-var getClosest = function (elem, selector) {
+function getClosest(elem, selector) {
 	for ( ; elem && elem !== document; elem = elem.parentNode ) {
 		if ( elem.matches( selector ) ) return elem;
 	}
